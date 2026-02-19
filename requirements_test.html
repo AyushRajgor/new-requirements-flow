@@ -1,0 +1,1978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Requirements Testing</title>
+<style>
+:root {
+  --bg: #f8f9fb;
+  --surface: #ffffff;
+  --surface-hover: #fafbfc;
+  --border: #e2e6ed;
+  --border-light: #eef1f6;
+  --text: #1a1d23;
+  --text-secondary: #5f6980;
+  --text-muted: #8a92a6;
+  --primary: #4f46e5;
+  --primary-light: #eef2ff;
+  --primary-dark: #4338ca;
+  --green: #059669;
+  --green-light: #ecfdf5;
+  --green-bg: #d1fae5;
+  --red: #dc2626;
+  --red-light: #fef2f2;
+  --red-bg: #fee2e2;
+  --amber: #d97706;
+  --amber-light: #fffbeb;
+  --amber-bg: #fef3c7;
+  --blue: #2563eb;
+  --blue-light: #eff6ff;
+  --purple: #7c3aed;
+  --purple-light: #f5f3ff;
+  --purple-bg: #ede9fe;
+  --radius: 10px;
+  --radius-sm: 6px;
+  --radius-lg: 14px;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.07);
+  --transition: 0.2s ease;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* ─── Header ─── */
+.header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow-sm);
+}
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text);
+}
+.header-brand .logo {
+  width: 28px; height: 28px;
+  background: var(--primary);
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-weight: 800; font-size: 13px;
+}
+.header-session {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-family: 'SF Mono', 'Fira Code', monospace;
+}
+
+/* ─── Layout ─── */
+.container { max-width: 960px; margin: 0 auto; padding: 28px 24px 60px; }
+
+/* ─── Stepper ─── */
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 28px;
+  padding: 0 4px;
+}
+.step-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: default;
+}
+.step-num {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700;
+  border: 2px solid var(--border);
+  color: var(--text-muted);
+  background: var(--surface);
+  transition: all var(--transition);
+  flex-shrink: 0;
+}
+.step-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  white-space: nowrap;
+  transition: color var(--transition);
+}
+.step-line {
+  flex: 1;
+  height: 2px;
+  background: var(--border);
+  margin: 0 12px;
+  min-width: 24px;
+  transition: background var(--transition);
+}
+.step-item.active .step-num { border-color: var(--primary); background: var(--primary); color: #fff; }
+.step-item.active .step-label { color: var(--text); }
+.step-item.done .step-num { border-color: var(--green); background: var(--green); color: #fff; }
+.step-item.done .step-label { color: var(--green); }
+.step-line.done { background: var(--green); }
+.step-line.active { background: var(--primary); }
+
+/* ─── Cards ─── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+  transition: opacity 0.3s, transform 0.3s;
+}
+.card-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.card-title .icon {
+  width: 20px; height: 20px;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0.6;
+}
+
+/* ─── Forms ─── */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.form-group { display: flex; flex-direction: column; gap: 5px; }
+.form-group.span-2 { grid-column: span 2; }
+.form-group.span-full { grid-column: 1 / -1; }
+.form-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+.form-input, .form-select, .form-textarea {
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 13.5px;
+  color: var(--text);
+  background: var(--surface);
+  transition: border-color var(--transition), box-shadow var(--transition);
+  font-family: inherit;
+  outline: none;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+}
+.form-input::placeholder, .form-textarea::placeholder { color: var(--text-muted); }
+.form-textarea { resize: vertical; min-height: 72px; }
+.form-file-wrapper {
+  position: relative;
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 32px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--transition);
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.form-file-wrapper:hover { border-color: var(--primary); background: var(--primary-light); }
+.form-file-wrapper.dragging { border-color: var(--primary); background: var(--primary-light); transform: scale(1.01); }
+.form-file-wrapper input[type="file"] {
+  position: absolute; inset: 0; opacity: 0; cursor: pointer;
+}
+.form-file-icon {
+  width: 44px; height: 44px;
+  background: var(--primary-light);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--primary);
+  margin-bottom: 4px;
+  transition: all var(--transition);
+}
+.form-file-wrapper:hover .form-file-icon { background: #ddd6fe; transform: translateY(-2px); }
+.form-file-label { font-size: 13.5px; color: var(--text-secondary); line-height: 1.4; }
+.form-file-label strong { color: var(--primary); text-decoration: underline; text-underline-offset: 2px; }
+.form-file-types { font-size: 11.5px; color: var(--text-muted); display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+.form-file-types span {
+  background: var(--surface); border: 1px solid var(--border-light); border-radius: 4px;
+  padding: 2px 8px; font-weight: 500; font-size: 11px; letter-spacing: 0.3px;
+}
+.form-file-name { font-size: 12.5px; color: var(--primary); font-weight: 600; margin-top: 4px; display: flex; align-items: center; gap: 6px; }
+.form-file-name .file-icon { color: var(--green); }
+
+/* ─── Source Divider ─── */
+.source-divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 20px 0;
+}
+.source-divider::before, .source-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-light);
+}
+.source-divider span {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ─── URL Input Group ─── */
+.url-input-group {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.url-input-group:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+}
+.url-input-group .url-prefix {
+  padding: 9px 12px;
+  background: var(--bg);
+  border-right: 1px solid var(--border-light);
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 500;
+  white-space: nowrap;
+  display: flex; align-items: center; gap: 6px;
+}
+.url-input-group input {
+  flex: 1;
+  padding: 9px 12px;
+  border: none;
+  font-size: 13.5px;
+  color: var(--text);
+  background: var(--surface);
+  outline: none;
+  font-family: inherit;
+}
+.url-input-group input::placeholder { color: var(--text-muted); }
+
+.divider {
+  height: 1px;
+  background: var(--border-light);
+  margin: 20px 0;
+}
+
+/* ─── Buttons ─── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 20px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  font-family: inherit;
+}
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 1px 2px rgba(79,70,229,0.3);
+}
+.btn-primary:hover { background: var(--primary-dark); box-shadow: 0 2px 8px rgba(79,70,229,0.35); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+.btn-ghost:hover { background: var(--bg); border-color: var(--text-muted); }
+
+/* ─── Badges ─── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+}
+.badge-green { background: var(--green-bg); color: var(--green); }
+.badge-red { background: var(--red-bg); color: var(--red); }
+.badge-amber { background: var(--amber-bg); color: var(--amber); }
+.badge-blue { background: #dbeafe; color: var(--blue); }
+.badge-purple { background: var(--purple-bg); color: var(--purple); }
+.badge-gray { background: #f1f5f9; color: #475569; }
+.badge-outline {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+.badge-critical { background: var(--red); color: #fff; }
+.badge-major { background: #ef4444; color: #fff; }
+
+/* ─── Analysis Summary ─── */
+.summary-card {
+  background: linear-gradient(135deg, var(--primary-light) 0%, #f0f4ff 100%);
+  border: 1px solid #c7d2fe;
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+.summary-stats {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 12px;
+}
+.stat-item {
+  display: flex;
+  flex-direction: column;
+}
+.stat-value {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--primary);
+}
+.stat-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+.summary-text {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.summary-text strong { color: var(--text); }
+
+/* ─── Questions ─── */
+.question-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 10px;
+  transition: border-color var(--transition);
+  background: var(--surface);
+}
+.question-card:hover { border-color: #c7d2fe; }
+.question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.question-text { font-size: 13.5px; font-weight: 500; color: var(--text); flex: 1; }
+.question-context { font-size: 12px; color: var(--text-muted); margin-bottom: 10px; }
+.question-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+  font-family: inherit;
+  color: var(--text);
+}
+.question-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+}
+
+/* ─── Processing ─── */
+.processing-card {
+  text-align: center;
+  padding: 40px 24px;
+}
+.processing-spinner {
+  width: 44px; height: 44px;
+  border: 3px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+  margin: 0 auto 20px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.processing-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.processing-subtitle {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+.progress-bar-track {
+  width: 100%;
+  max-width: 360px;
+  height: 6px;
+  background: var(--border-light);
+  border-radius: 3px;
+  margin: 0 auto 8px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), #818cf8);
+  border-radius: 3px;
+  transition: width 1s ease;
+}
+.processing-time {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-family: 'SF Mono', 'Fira Code', monospace;
+}
+.completed-icon {
+  width: 48px; height: 48px;
+  background: var(--green-light);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 16px;
+  color: var(--green);
+  font-size: 22px;
+}
+
+/* ─── Results ─── */
+.results-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.results-tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  padding: 3px;
+}
+.results-tab {
+  padding: 6px 14px;
+  border-radius: 5px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition);
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  white-space: nowrap;
+}
+.results-tab:hover { color: var(--text); background: var(--surface); }
+.results-tab.active {
+  background: var(--surface);
+  color: var(--primary);
+  box-shadow: var(--shadow-sm);
+}
+.results-tab .count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  font-size: 11px;
+  padding: 0 5px;
+  margin-left: 4px;
+  background: var(--border-light);
+  color: var(--text-muted);
+}
+.results-tab.active .count { background: var(--primary-light); color: var(--primary); }
+
+/* ─── Results Toolbar ─── */
+.results-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.search-input {
+  padding: 7px 12px 7px 32px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 12.5px;
+  outline: none;
+  width: 220px;
+  font-family: inherit;
+  color: var(--text);
+  transition: border-color var(--transition), box-shadow var(--transition);
+  background: var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238a92a6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E") 10px center no-repeat;
+}
+.search-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79,70,229,0.1); }
+.filter-pills {
+  display: flex;
+  gap: 4px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  padding: 3px;
+}
+.filter-pill {
+  padding: 5px 12px;
+  border-radius: 5px;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  color: var(--text-muted);
+  transition: all var(--transition);
+}
+.filter-pill:hover { color: var(--text); }
+.filter-pill.active { background: var(--surface); box-shadow: var(--shadow-sm); }
+.filter-pill.active[data-type="all"] { color: var(--primary); }
+.filter-pill.active[data-type="positive"] { color: var(--green); }
+.filter-pill.active[data-type="negative"] { color: var(--red); }
+.filter-pill.active[data-type="edge"] { color: var(--amber); }
+.filter-pill .count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  font-size: 10px;
+  padding: 0 4px;
+  margin-left: 3px;
+  background: var(--border-light);
+  color: var(--text-muted);
+  font-weight: 700;
+}
+.filter-pill.active .count { background: rgba(0,0,0,0.08); }
+.toolbar-spacer { flex: 1; }
+.btn-sm {
+  padding: 5px 12px;
+  font-size: 11.5px;
+  border-radius: 5px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-weight: 600;
+  font-family: inherit;
+  transition: all var(--transition);
+}
+.btn-sm:hover { background: var(--bg); border-color: var(--text-muted); }
+
+/* ─── Test Case Cards ─── */
+.tc-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 12px;
+  overflow: hidden;
+  transition: border-color var(--transition), box-shadow var(--transition);
+  background: var(--surface);
+}
+.tc-card:hover { border-color: #c7d2fe; box-shadow: var(--shadow-md); }
+.tc-card .tc-collapse-toggle {
+  cursor: pointer;
+  user-select: none;
+}
+.tc-card .tc-expand-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, opacity 0.2s ease;
+  opacity: 0;
+}
+.tc-card.expanded .tc-expand-body {
+  max-height: 2000px;
+  opacity: 1;
+}
+.tc-chevron {
+  width: 18px; height: 18px;
+  transition: transform 0.2s ease;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+.tc-card.expanded .tc-chevron { transform: rotate(180deg); }
+.tc-card .tc-inner { padding: 14px 20px; }
+
+.tc-accent { width: 100%; height: 3px; }
+.tc-accent-blue { background: linear-gradient(90deg, var(--blue), #60a5fa); }
+.tc-accent-purple { background: linear-gradient(90deg, var(--purple), #a78bfa); }
+.tc-accent-cyan { background: linear-gradient(90deg, #0891b2, #22d3ee); }
+
+.tc-inner { padding: 16px 20px; }
+
+.tc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.tc-title { font-size: 14px; font-weight: 700; color: var(--text); flex: 1; line-height: 1.4; }
+.tc-badges { display: flex; gap: 5px; flex-wrap: wrap; flex-shrink: 0; }
+
+.tc-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.tc-section {
+  margin-top: 14px;
+}
+.tc-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.tc-steps {
+  background: var(--bg);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  font-size: 12.5px;
+  line-height: 1.7;
+  color: var(--text);
+  white-space: pre-wrap;
+  font-family: inherit;
+}
+.tc-prereq-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--purple-light);
+  border: 1px solid #ddd6fe;
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  font-size: 12.5px;
+  color: var(--purple);
+  font-weight: 500;
+}
+.tc-kb-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--blue-light);
+  border: 1px solid #bfdbfe;
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  font-size: 12.5px;
+  color: var(--blue);
+  font-weight: 500;
+}
+
+/* ─── Test Data Table ─── */
+.td-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 12.5px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.td-table th {
+  background: var(--bg);
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-align: left;
+  padding: 7px 12px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  border-bottom: 1px solid var(--border-light);
+}
+.td-table td {
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--border-light);
+  color: var(--text);
+}
+.td-table tr:last-child td { border-bottom: none; }
+.td-table code {
+  background: var(--primary-light);
+  color: var(--primary);
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 11.5px;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+}
+
+/* ─── Existing Card ─── */
+.existing-reason {
+  background: var(--blue-light);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 13px;
+  color: #1e40af;
+  line-height: 1.5;
+}
+
+/* ─── Results Context Row ─── */
+.context-row {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+/* ─── Context Panel (shared between Q&A and AI Analysis) ─── */
+.ctx-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.ctx-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  cursor: pointer;
+  user-select: none;
+  transition: background var(--transition);
+  flex-shrink: 0;
+}
+.ctx-panel-header:hover { background: var(--bg); }
+.ctx-panel-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text);
+}
+.ctx-panel-title .icon { opacity: 0.5; display: flex; }
+.ctx-panel-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.ctx-panel-chevron {
+  width: 16px; height: 16px;
+  color: var(--text-muted);
+  transition: transform 0.2s ease;
+}
+.ctx-panel.expanded .ctx-panel-chevron { transform: rotate(180deg); }
+.ctx-panel-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease;
+}
+.ctx-panel.expanded .ctx-panel-body {
+  max-height: 2000px;
+}
+.ctx-panel-content {
+  padding: 0 20px 16px;
+  border-top: 1px solid var(--border-light);
+}
+
+/* ─── Q&A Items ─── */
+.qa-item {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-light);
+}
+.qa-item:last-child { border-bottom: none; }
+.qa-question {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 3px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.qa-question .q-num {
+  flex-shrink: 0;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--primary-light);
+  color: var(--primary);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700;
+  margin-top: 1px;
+}
+.qa-answer {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  margin-left: 26px;
+  line-height: 1.5;
+}
+.qa-answer.no-answer {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ─── AI Analysis Panel ─── */
+.ai-confidence {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-light);
+}
+.ai-confidence-ring {
+  position: relative;
+  width: 44px; height: 44px;
+  flex-shrink: 0;
+}
+.ai-confidence-ring svg { transform: rotate(-90deg); }
+.ai-confidence-ring .ring-bg { stroke: var(--border-light); }
+.ai-confidence-ring .ring-fill { transition: stroke-dashoffset 0.6s ease; stroke-linecap: round; }
+.ai-confidence-value {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--text);
+}
+.ai-confidence-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+.ai-confidence-label strong { color: var(--text); font-weight: 700; }
+
+.ai-section { padding: 10px 0; border-bottom: 1px solid var(--border-light); }
+.ai-section:last-child { border-bottom: none; }
+.ai-section-title {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 6px;
+}
+.ai-section-text {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+.ai-assumption-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.ai-assumption-list li {
+  font-size: 11.5px;
+  color: var(--text-secondary);
+  background: var(--bg);
+  border: 1px solid var(--border-light);
+  border-radius: 4px;
+  padding: 3px 9px;
+  line-height: 1.4;
+}
+.ai-coverage-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.ai-coverage-list li {
+  font-size: 12px;
+  color: var(--text-secondary);
+  padding: 2px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+.ai-coverage-list li::before {
+  content: '';
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--green);
+  flex-shrink: 0;
+  margin-top: 6px;
+}
+
+/* ─── Responsive ─── */
+
+/* Small laptops (13" / 1280-1366px) */
+@media (max-width: 1400px) {
+  .container { max-width: 880px; padding: 24px 20px 48px; }
+  .header { padding: 0 24px; }
+  .card { padding: 20px; }
+  .form-grid[style*="1fr 1fr 1fr"] { grid-template-columns: 1fr 1fr !important; }
+  .form-file-wrapper { padding: 24px 16px; }
+  .stepper { gap: 0; margin-bottom: 24px; }
+  .step-line { margin: 0 8px; min-width: 16px; }
+}
+
+/* Very small displays or high-DPI scaled (effective viewport ≤ 1100px) */
+@media (max-width: 1100px) {
+  .container { max-width: 100%; padding: 20px 16px 40px; }
+  .header { padding: 0 16px; height: 50px; }
+  .card { padding: 18px; margin-bottom: 16px; }
+  .form-grid[style*="1fr 1fr 1fr"] { grid-template-columns: 1fr !important; }
+  .step-label { font-size: 12px; }
+  .step-num { width: 24px; height: 24px; font-size: 11px; }
+  .step-line { margin: 0 6px; min-width: 12px; }
+  .results-toolbar { gap: 6px; }
+  .search-input { width: 180px; }
+  .tc-inner { padding: 12px 16px; }
+  .summary-stats { gap: 16px; flex-wrap: wrap; }
+}
+
+/* ─── Error Toast ─── */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--red);
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: var(--radius);
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: 0 8px 24px rgba(220,38,38,0.3);
+  z-index: 999;
+  animation: slideUp 0.3s ease;
+  max-width: 400px;
+}
+@keyframes slideUp {
+  from { transform: translateY(16px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* ─── Session History ─── */
+.session-list { margin-top: 8px; }
+.session-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  margin-bottom: 6px;
+  font-size: 12.5px;
+  transition: border-color var(--transition);
+}
+.session-item:hover { border-color: var(--primary); }
+.session-item-info { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+.session-item-id {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-weight: 600;
+  color: var(--text);
+  font-size: 12px;
+}
+.session-item-org { color: var(--text-secondary); }
+.session-item-time { color: var(--text-muted); font-size: 11px; }
+.session-item-actions { display: flex; gap: 4px; flex-shrink: 0; }
+.session-delete {
+  width: 24px; height: 24px;
+  display: flex; align-items: center; justify-content: center;
+  border: none; background: transparent;
+  color: var(--text-muted); cursor: pointer;
+  border-radius: 4px; font-size: 14px;
+  transition: all var(--transition);
+}
+.session-delete:hover { background: var(--red-light); color: var(--red); }
+
+/* ─── Utils ─── */
+.hidden { display: none !important; }
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.mt-4 { margin-top: 16px; }
+.gap-8 { gap: 8px; }
+.actions { display: flex; gap: 10px; margin-top: 20px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-brand">
+    <div class="logo">R</div>
+    Requirements Testing
+  </div>
+  <div class="header-session" id="session-display"></div>
+</div>
+
+<div class="container">
+
+  <!-- Stepper -->
+  <div class="stepper" id="stepper">
+    <div class="step-item active" data-step="1">
+      <div class="step-num">1</div>
+      <div class="step-label">Upload</div>
+    </div>
+    <div class="step-line" data-line="1"></div>
+    <div class="step-item" data-step="2">
+      <div class="step-num">2</div>
+      <div class="step-label">Review</div>
+    </div>
+    <div class="step-line" data-line="2"></div>
+    <div class="step-item" data-step="3">
+      <div class="step-num">3</div>
+      <div class="step-label">Generate</div>
+    </div>
+    <div class="step-line" data-line="3"></div>
+    <div class="step-item" data-step="4">
+      <div class="step-num">4</div>
+      <div class="step-label">Results</div>
+    </div>
+  </div>
+
+  <!-- Step 1: Upload -->
+  <div id="step-upload">
+
+    <!-- Resume / Recent Sessions -->
+    <div class="card" style="padding:16px 24px">
+      <div style="display:flex;align-items:flex-end;gap:10px">
+        <div class="form-group" style="flex:1">
+          <label class="form-label">Resume Session</label>
+          <input class="form-input" type="text" id="resume-session-id" placeholder="Paste a session ID to resume...">
+        </div>
+        <button class="btn btn-ghost" id="btn-resume" onclick="resumeSession()">Resume</button>
+      </div>
+      <div id="session-history"></div>
+    </div>
+
+    <!-- Hidden connection fields (kept for JS compatibility) -->
+    <input type="hidden" id="api-url" value="http://localhost:8081">
+    <input type="hidden" id="auth-token" value="">
+
+    <!-- Upload Form -->
+    <div class="card">
+      <div class="card-title">
+        <span class="icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M5 10l7-7 7 7"/><path d="M20 21H4"/></svg>
+        </span>
+        Upload Requirements
+      </div>
+
+      <!-- Row 1: ID, Org, Type -->
+      <div class="form-grid" style="grid-template-columns: 1fr 1fr 1fr;">
+        <div class="form-group">
+          <label class="form-label">Upload ID</label>
+          <input class="form-input" type="text" id="upload-id" placeholder="12345">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Organization</label>
+          <input class="form-input" type="text" id="org-name" placeholder="acme-corp">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Test Type</label>
+          <div class="form-input" style="background:var(--bg);color:var(--text);cursor:default;display:flex;align-items:center;gap:6px">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            Browser
+          </div>
+          <input type="hidden" id="test-type" value="BROWSER">
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- File Source -->
+      <div class="form-group">
+        <label class="form-label">Requirements Source</label>
+      </div>
+
+      <div class="form-file-wrapper" id="file-drop-zone">
+        <input type="file" id="req-file" accept=".csv,.xlsx,.xls,.docx,.pdf,.txt" onchange="updateFileName()">
+        <div class="form-file-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        </div>
+        <div class="form-file-label"><strong>Choose a file</strong> or drag and drop</div>
+        <div class="form-file-types">
+          <span>CSV</span><span>Excel</span>
+        </div>
+        <div class="form-file-name hidden" id="file-name-display"></div>
+      </div>
+
+      <!-- URL section (commented out)
+      <div class="source-divider"><span>or provide a URL</span></div>
+      <div class="form-group">
+        <div class="url-input-group">
+          <div class="url-prefix">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            URL
+          </div>
+          <input type="text" id="file-url" placeholder="https://example.com/requirements.xlsx">
+        </div>
+      </div>
+      -->
+      <input type="hidden" id="file-url" value="">
+
+      <!-- Additional Context section (commented out)
+      <div class="divider"></div>
+      <div class="form-group">
+        <label class="form-label">Additional Context <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted)">(optional)</span></label>
+        <textarea class="form-textarea" id="user-text" placeholder="Add any helpful context: application URLs, credentials, specific areas to focus on..." style="min-height:80px"></textarea>
+      </div>
+      -->
+      <input type="hidden" id="user-text" value="">
+
+      <div class="actions" style="margin-top:24px">
+        <button class="btn btn-primary" id="btn-analyze" onclick="analyzeRequirements()" style="padding:11px 28px;font-size:14px;border-radius:var(--radius-sm)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 9 8 12 2 12"/></svg>
+          Analyze Requirements
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Step 2: Analysis & Questions -->
+  <div id="step-questions" class="hidden">
+    <div id="analysis-summary"></div>
+
+    <div class="card">
+      <div class="card-title">
+        <span class="icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </span>
+        Clarification Questions
+      </div>
+      <div id="questions-list"></div>
+      <div class="actions">
+        <button class="btn btn-primary" id="btn-generate" onclick="submitAnswers()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          Generate Test Cases
+        </button>
+        <button class="btn btn-ghost" onclick="resetAll()">Start Over</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 3: Processing -->
+  <div id="step-status" class="hidden">
+    <div class="card">
+      <div id="status-content" class="processing-card"></div>
+    </div>
+  </div>
+
+  <!-- Step 4: Results -->
+  <div id="step-results" class="hidden">
+    <div id="results-context-row" class="hidden"></div>
+    <div class="card">
+      <div class="results-bar">
+        <div class="card-title" style="margin-bottom:0">
+          <span class="icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          </span>
+          Generated Test Cases
+        </div>
+        <div class="results-tabs" id="results-tabs"></div>
+      </div>
+      <div class="results-toolbar hidden" id="results-toolbar">
+        <input class="search-input" type="text" id="search-input" placeholder="Search test cases..." oninput="applyFilters()">
+        <div class="filter-pills" id="filter-pills">
+          <button class="filter-pill active" data-type="all" onclick="setFilter(this)">All</button>
+          <button class="filter-pill" data-type="positive" onclick="setFilter(this)">Positive</button>
+          <button class="filter-pill" data-type="negative" onclick="setFilter(this)">Negative</button>
+          <button class="filter-pill" data-type="edge" onclick="setFilter(this)">Edge</button>
+        </div>
+        <div class="toolbar-spacer"></div>
+        <button class="btn-sm" onclick="expandAll()">Expand All</button>
+        <button class="btn-sm" onclick="collapseAll()">Collapse All</button>
+      </div>
+      <div id="results-content"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const S = {
+  sessionId: null,
+  analysis: null,
+  userResponses: null,
+  pollTimer: null,
+  pollStart: null,
+  elapsedTimer: null,
+};
+
+function $(id) { return document.getElementById(id); }
+function getHeaders() {
+  const h = { 'Cqa-Origin': $('org-name').value };
+  const a = $('auth-token').value.trim();
+  if (a) h['Authorization'] = a;
+  return h;
+}
+function apiBase() { return $('api-url').value.replace(/\/+$/, ''); }
+
+function updateFileName() {
+  const f = $('req-file').files[0];
+  const el = $('file-name-display');
+  if (f) {
+    el.innerHTML = `<span class="file-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span> ${esc(f.name)}`;
+    el.classList.remove('hidden');
+  }
+  else el.classList.add('hidden');
+}
+
+// Drag-and-drop enhancement
+(function() {
+  const zone = document.getElementById('file-drop-zone');
+  if (!zone) return;
+  ['dragenter','dragover'].forEach(e => zone.addEventListener(e, ev => { ev.preventDefault(); zone.classList.add('dragging'); }));
+  ['dragleave','drop'].forEach(e => zone.addEventListener(e, () => zone.classList.remove('dragging')));
+  zone.addEventListener('drop', ev => {
+    ev.preventDefault();
+    const input = document.getElementById('req-file');
+    if (ev.dataTransfer.files.length) { input.files = ev.dataTransfer.files; updateFileName(); }
+  });
+})();
+
+function setStepper(active, doneUpTo) {
+  document.querySelectorAll('.step-item').forEach(s => {
+    const n = +s.dataset.step;
+    s.classList.remove('active', 'done');
+    if (n === active) s.classList.add('active');
+    else if (n < active || n <= doneUpTo) s.classList.add('done');
+  });
+  document.querySelectorAll('.step-line').forEach(l => {
+    const n = +l.dataset.line;
+    l.classList.remove('active', 'done');
+    if (n < active) l.classList.add('done');
+    else if (n === active) l.classList.add('active');
+  });
+}
+
+function showToast(msg) {
+  const old = document.querySelector('.toast');
+  if (old) old.remove();
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 5000);
+}
+
+function resetAll() {
+  if (S.pollTimer) clearInterval(S.pollTimer);
+  if (S.elapsedTimer) clearInterval(S.elapsedTimer);
+  Object.assign(S, { sessionId: null, analysis: null, userResponses: null, pollTimer: null, pollStart: null, elapsedTimer: null });
+  $('step-questions').classList.add('hidden');
+  $('step-status').classList.add('hidden');
+  $('step-results').classList.add('hidden');
+  $('results-context-row').innerHTML = '';
+  $('results-context-row').classList.add('hidden');
+  $('step-upload').classList.remove('hidden');
+  $('btn-analyze').disabled = false;
+  $('session-display').textContent = '';
+  $('resume-session-id').value = '';
+  clearSaved();
+  setStepper(1, 0);
+}
+
+function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+// ─── Session Persistence (multi-session) ───
+const STORAGE_KEY = 'rqt_sessions';
+
+function getAllSessions() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return [];
+    return JSON.parse(raw);
+  } catch { return []; }
+}
+
+function saveSession() {
+  try {
+    const sessions = getAllSessions().filter(s => s.sessionId !== S.sessionId);
+    sessions.unshift({
+      sessionId: S.sessionId,
+      apiUrl: $('api-url').value,
+      orgName: $('org-name').value,
+      authToken: $('auth-token').value,
+      timestamp: Date.now()
+    });
+    // Keep max 20 sessions
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(sessions.slice(0, 20)));
+    renderSessionHistory();
+  } catch (e) { /* localStorage unavailable */ }
+}
+
+function removeSession(idx) {
+  const sessions = getAllSessions();
+  sessions.splice(idx, 1);
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(sessions)); } catch {}
+  renderSessionHistory();
+}
+
+function clearAllSessions() {
+  localStorage.removeItem(STORAGE_KEY);
+  renderSessionHistory();
+}
+
+function clearSaved() {
+  // Called by resetAll — just re-render the list
+  renderSessionHistory();
+}
+
+function timeAgo(ts) {
+  const diff = Date.now() - ts;
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return 'just now';
+  if (mins < 60) return `${mins}m ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs}h ago`;
+  const days = Math.floor(hrs / 24);
+  return `${days}d ago`;
+}
+
+function renderSessionHistory() {
+  const el = $('session-history');
+  const sessions = getAllSessions();
+  if (!sessions.length) { el.innerHTML = ''; return; }
+
+  let html = '<div style="display:flex;align-items:center;justify-content:space-between;margin-top:4px;margin-bottom:6px"><label class="form-label" style="margin:0">Recent Sessions</label>';
+  if (sessions.length > 1) html += '<button class="btn-sm" onclick="clearAllSessions()" style="font-size:10.5px;padding:3px 8px;color:var(--text-muted)">Clear All</button>';
+  html += '</div><div class="session-list">';
+
+  sessions.forEach((s, i) => {
+    html += `<div class="session-item">
+      <div class="session-item-info">
+        <span class="session-item-id">${esc(s.sessionId)}</span>
+        <span class="session-item-org">${esc(s.orgName || '')}</span>
+        <span class="session-item-time">${timeAgo(s.timestamp)}</span>
+      </div>
+      <div class="session-item-actions">
+        <button class="btn-sm" onclick="resumeFromHistory(${i})">Resume</button>
+        <button class="session-delete" onclick="removeSession(${i})" title="Remove">&times;</button>
+      </div>
+    </div>`;
+  });
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+function resumeFromHistory(idx) {
+  const s = getAllSessions()[idx];
+  if (!s) return;
+  $('api-url').value = s.apiUrl || 'http://localhost:8081';
+  $('org-name').value = s.orgName || '';
+  $('auth-token').value = s.authToken || '';
+  $('resume-session-id').value = s.sessionId;
+  resumeSession();
+}
+
+async function resumeSession() {
+  const sid = $('resume-session-id').value.trim();
+  if (!sid) { showToast('Enter a session ID.'); return; }
+  if (!$('org-name').value.trim()) { showToast('Organization name is required.'); return; }
+
+  // Show loading state on Resume button
+  const btn = $('btn-resume');
+  const btnOriginal = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '<span class="processing-spinner" style="width:14px;height:14px;border-width:2px;margin:0"></span> Loading...';
+  // Disable history resume buttons too
+  document.querySelectorAll('.session-item .btn-sm').forEach(b => b.disabled = true);
+
+  S.sessionId = sid;
+  $('session-display').textContent = `Session: ${sid}`;
+
+  function resetResumeBtn() {
+    btn.disabled = false;
+    btn.innerHTML = btnOriginal;
+    document.querySelectorAll('.session-item .btn-sm').forEach(b => b.disabled = false);
+  }
+
+  try {
+    const r = await fetch(`${apiBase()}/case/suggestions/requirements/${sid}`, { method: 'GET', headers: getHeaders() });
+    const d = await r.json();
+    if (!r.ok || !d.success) { showToast(d.message || 'Session not found.'); resetResumeBtn(); return; }
+
+    if (d.status === 'completed') {
+      $('step-upload').classList.add('hidden');
+      $('step-results').classList.remove('hidden');
+      setStepper(4, 3);
+      renderResults(d.test_cases, d.analysis, d.user_responses, d.ai_analysis);
+      saveSession();
+    } else {
+      $('step-upload').classList.add('hidden');
+      $('step-status').classList.remove('hidden');
+      setStepper(3, 2);
+      S.pollStart = Date.now();
+      const est = 120;
+      renderProcessing(est);
+      S.elapsedTimer = setInterval(() => renderProcessing(est), 1000);
+      S.pollTimer = setInterval(() => pollOnce(est), 10000);
+      setTimeout(() => pollOnce(est), 3000);
+      saveSession();
+    }
+  } catch (e) {
+    showToast(`Request failed: ${e.message}`);
+    resetResumeBtn();
+  }
+}
+
+// Migrate old single-session key to new multi-session format
+(function migrateOldSession() {
+  try {
+    const old = localStorage.getItem('rqt_session');
+    if (old) {
+      const parsed = JSON.parse(old);
+      if (parsed && parsed.sessionId) {
+        const existing = getAllSessions();
+        if (!existing.some(s => s.sessionId === parsed.sessionId)) {
+          existing.unshift(parsed);
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(existing));
+        }
+      }
+      localStorage.removeItem('rqt_session');
+    }
+  } catch {}
+})();
+
+// Render session history on page load
+window.addEventListener('DOMContentLoaded', () => renderSessionHistory());
+
+// ─── Step 1: Analyze ───
+async function analyzeRequirements() {
+  const btn = $('btn-analyze');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="processing-spinner" style="width:15px;height:15px;border-width:2px;margin:0"></span> Analyzing...';
+
+  const fd = new FormData();
+  const uid = $('upload-id').value.trim();
+  if (!uid) { showToast('Upload ID is required.'); resetBtn(); return; }
+  fd.append('id', uid);
+  fd.append('testType', $('test-type').value);
+  if ($('test-type').value === 'MOBILE') fd.append('platform', $('platform').value);
+  fd.append('text', $('user-text').value);
+
+  const fi = $('req-file');
+  const fu = $('file-url').value.trim();
+  if (fi.files.length) fd.append('file', fi.files[0]);
+  else if (fu) fd.append('url', fu);
+  else { showToast('Provide a file or URL.'); resetBtn(); return; }
+
+  function resetBtn() {
+    btn.disabled = false;
+    btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 9 8 12 2 12"/></svg> Analyze Requirements';
+  }
+
+  try {
+    const r = await fetch(`${apiBase()}/case/suggestions/requirements`, { method: 'POST', headers: getHeaders(), body: fd });
+    const d = await r.json();
+    if (!r.ok || !d.success) { showToast(d.message || 'Analysis failed.'); resetBtn(); return; }
+
+    S.sessionId = d.session_id;
+    S.analysis = d.analysis;
+    $('session-display').textContent = `Session: ${d.session_id.slice(0, 8)}...`;
+
+    renderAnalysis(d.analysis);
+    $('step-upload').classList.add('hidden');
+    $('step-questions').classList.remove('hidden');
+    setStepper(2, 1);
+    resetBtn();
+  } catch (e) {
+    showToast(`Request failed: ${e.message}`);
+    resetBtn();
+  }
+}
+
+function renderAnalysis(a) {
+  const fmap = { high: ['badge-green', 'High'], medium: ['badge-amber', 'Medium'], low: ['badge-red', 'Low'], invalid: ['badge-gray', 'Invalid'] };
+  const [fcls, ftxt] = fmap[a.feasibility] || ['badge-gray', a.feasibility];
+
+  $('analysis-summary').innerHTML = `
+    <div class="summary-card">
+      <div class="summary-stats">
+        <div class="stat-item">
+          <span class="stat-value"><span class="badge ${fcls}" style="font-size:13px;padding:3px 12px">${ftxt}</span></span>
+          <span class="stat-label">Feasibility</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value">${a.testcases || 0}</span>
+          <span class="stat-label">Est. Test Cases</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value">${(a.questions || []).length}</span>
+          <span class="stat-label">Questions</span>
+        </div>
+      </div>
+      <div class="summary-text">
+        <strong>Summary:</strong> ${esc(a.summary || '')}<br>
+        ${a.message ? `<strong>Note:</strong> ${esc(a.message)}` : ''}
+      </div>
+    </div>`;
+
+  const qs = a.questions || [];
+  if (!qs.length) {
+    $('questions-list').innerHTML = '<p style="font-size:13px;color:var(--text-muted);padding:8px 0">No questions — ready to generate.</p>';
+    return;
+  }
+
+  $('questions-list').innerHTML = qs.map(q => `
+    <div class="question-card">
+      <div class="question-header">
+        <div class="question-text">${esc(q.question)}</div>
+        <span class="badge ${q.required ? 'badge-red' : 'badge-blue'}">${q.required ? 'Required' : 'Optional'}</span>
+      </div>
+      <div class="question-context">${esc(q.context || '')}</div>
+      <input class="question-input" type="text" data-qid="${q.id}" data-question="${esc(q.question)}" placeholder="Type your answer...">
+    </div>`).join('');
+}
+
+// ─── Step 2: Submit ───
+async function submitAnswers() {
+  const btn = $('btn-generate');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="processing-spinner" style="width:15px;height:15px;border-width:2px;margin:0"></span> Submitting...';
+
+  const qs = [];
+  document.querySelectorAll('.question-input[data-qid]').forEach(i => {
+    qs.push({ id: i.dataset.qid, question: i.dataset.question, answer: i.value.trim() || null });
+  });
+  S.userResponses = qs;
+
+  try {
+    const r = await fetch(`${apiBase()}/case/suggestions/requirements/${S.sessionId}`, {
+      method: 'POST',
+      headers: { ...getHeaders(), 'Content-Type': 'application/json' },
+      body: JSON.stringify({ questions: qs }),
+    });
+    const d = await r.json();
+    if (!r.ok || !d.success) { showToast(d.message || 'Submission failed.'); btn.disabled = false; return; }
+
+    $('step-questions').classList.add('hidden');
+    $('step-status').classList.remove('hidden');
+    setStepper(3, 2);
+    startPolling(d.estimated_time);
+    saveSession();
+  } catch (e) {
+    showToast(`Request failed: ${e.message}`);
+    btn.disabled = false;
+  }
+}
+
+// ─── Step 3: Poll ───
+function startPolling(est) {
+  S.pollStart = Date.now();
+  renderProcessing(est);
+  S.elapsedTimer = setInterval(() => renderProcessing(est), 1000);
+  S.pollTimer = setInterval(() => pollOnce(est), 10000);
+  setTimeout(() => pollOnce(est), 3000);
+}
+
+function renderProcessing(est) {
+  const elapsed = Math.round((Date.now() - S.pollStart) / 1000);
+  const pct = Math.min(95, Math.round((elapsed / est) * 100));
+  $('status-content').innerHTML = `
+    <div class="processing-spinner"></div>
+    <div class="processing-title">Generating test cases...</div>
+    <div class="processing-subtitle">This may take a few minutes depending on complexity</div>
+    <div class="progress-bar-track">
+      <div class="progress-bar-fill" style="width:${pct}%"></div>
+    </div>
+    <div class="processing-time">${elapsed}s elapsed &middot; ~${est}s estimated</div>`;
+}
+
+async function pollOnce(est) {
+  try {
+    const r = await fetch(`${apiBase()}/case/suggestions/requirements/${S.sessionId}`, { method: 'GET', headers: getHeaders() });
+    const d = await r.json();
+    if (d.status === 'completed') {
+      clearInterval(S.pollTimer);
+      clearInterval(S.elapsedTimer);
+      const elapsed = Math.round((Date.now() - S.pollStart) / 1000);
+      $('status-content').innerHTML = `
+        <div class="completed-icon">&#10003;</div>
+        <div class="processing-title">Generation Complete</div>
+        <div class="processing-time">${d.test_cases?.length || 0} items generated in ${elapsed}s</div>`;
+      setTimeout(() => {
+        $('step-status').classList.add('hidden');
+        $('step-results').classList.remove('hidden');
+        setStepper(4, 3);
+        renderResults(d.test_cases, d.analysis || S.analysis, d.user_responses || S.userResponses, d.ai_analysis);
+      }, 1200);
+    }
+  } catch (e) { /* keep polling */ }
+}
+
+// ─── Step 4: Results ───
+const chevronSVG = '<svg class="tc-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
+
+const ctxChevron = '<svg class="ctx-panel-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
+
+function buildQAPanel(analysis, userResponses) {
+  const questions = (analysis && analysis.questions) || [];
+  const responses = userResponses || S.userResponses || [];
+  if (!questions.length) return '';
+
+  const answerMap = {};
+  if (Array.isArray(responses)) {
+    responses.forEach(r => { if (r.id) answerMap[r.id] = r.answer; });
+  }
+
+  const qaItems = questions.map((q, i) => {
+    const answer = answerMap[q.id];
+    const hasAnswer = answer && answer.trim();
+    return `<div class="qa-item">
+      <div class="qa-question"><span class="q-num">${i + 1}</span>${esc(q.question)}</div>
+      <div class="qa-answer ${hasAnswer ? '' : 'no-answer'}">${hasAnswer ? esc(answer) : 'No answer provided'}</div>
+    </div>`;
+  }).join('');
+
+  return `<div class="ctx-panel expanded">
+    <div class="ctx-panel-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <div class="ctx-panel-title">
+        <span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
+        Clarifications
+      </div>
+      <div class="ctx-panel-meta">
+        <span class="badge badge-purple">${questions.length} Q&amp;A</span>
+        ${ctxChevron}
+      </div>
+    </div>
+    <div class="ctx-panel-body">
+      <div class="ctx-panel-content">${qaItems}</div>
+    </div>
+  </div>`;
+}
+
+function buildConfidenceRing(score) {
+  const r = 18, c = 2 * Math.PI * r;
+  const pct = Math.min(100, Math.max(0, score));
+  const offset = c - (pct / 100) * c;
+  const color = pct >= 80 ? 'var(--green)' : pct >= 50 ? 'var(--amber)' : 'var(--red)';
+  return `<div class="ai-confidence-ring">
+    <svg width="44" height="44" viewBox="0 0 44 44">
+      <circle class="ring-bg" cx="22" cy="22" r="${r}" fill="none" stroke-width="4"/>
+      <circle class="ring-fill" cx="22" cy="22" r="${r}" fill="none" stroke="${color}" stroke-width="4"
+        stroke-dasharray="${c}" stroke-dashoffset="${offset}"/>
+    </svg>
+    <div class="ai-confidence-value">${pct}</div>
+  </div>`;
+}
+
+function buildAIAnalysisPanel(aiAnalysis) {
+  if (!aiAnalysis) return '';
+
+  const understanding = aiAnalysis.ai_understanding || '';
+  const assumptions = aiAnalysis.assumptions_made || [];
+  const coverage = aiAnalysis.coverage_notes || {};
+  const confidence = aiAnalysis.confidence || 0;
+
+  let sections = '';
+
+  // Confidence
+  sections += `<div class="ai-confidence">
+    ${buildConfidenceRing(confidence)}
+    <div class="ai-confidence-label">
+      <strong>Confidence: ${confidence}%</strong>
+    </div>
+  </div>`;
+
+  // Understanding
+  if (understanding) {
+    sections += `<div class="ai-section">
+      <div class="ai-section-title">Understanding</div>
+      <div class="ai-section-text">${esc(understanding)}</div>
+    </div>`;
+  }
+
+  // Assumptions
+  if (assumptions.length) {
+    sections += `<div class="ai-section">
+      <div class="ai-section-title">Assumptions Made</div>
+      <ul class="ai-coverage-list">${assumptions.map(a => `<li>${esc(a)}</li>`).join('')}</ul>
+    </div>`;
+  }
+
+  // Coverage
+  const areas = coverage.areas || [];
+  if (areas.length || coverage.description) {
+    sections += `<div class="ai-section">
+      <div class="ai-section-title">Coverage</div>
+      ${coverage.description ? `<div class="ai-section-text" style="margin-bottom:6px">${esc(coverage.description)}</div>` : ''}
+      ${areas.length ? `<ul class="ai-coverage-list">${areas.map(a => `<li>${esc(a)}</li>`).join('')}</ul>` : ''}
+    </div>`;
+  }
+
+  return `<div class="ctx-panel expanded">
+    <div class="ctx-panel-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <div class="ctx-panel-title">
+        <span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 0 1 4 4c0 1.95-1.4 3.58-3.25 3.93L12 22"/><path d="M12 2a4 4 0 0 0-4 4c0 1.95 1.4 3.58 3.25 3.93"/></svg></span>
+        AI Reasoning
+      </div>
+      <div class="ctx-panel-meta">
+        <span class="badge badge-green">${aiAnalysis.confidence || 0}% confident</span>
+        ${ctxChevron}
+      </div>
+    </div>
+    <div class="ctx-panel-body">
+      <div class="ctx-panel-content">${sections}</div>
+    </div>
+  </div>`;
+}
+
+function renderContextRow(analysis, userResponses, aiAnalysis) {
+  const el = $('results-context-row');
+  if (!el) return;
+
+  const qaHTML = buildQAPanel(analysis, userResponses);
+  const aiHTML = buildAIAnalysisPanel(aiAnalysis);
+
+  if (!qaHTML && !aiHTML) {
+    el.classList.add('hidden');
+    el.innerHTML = '';
+    return;
+  }
+
+  el.innerHTML = `<div class="context-row">${qaHTML}${aiHTML}</div>`;
+  el.classList.remove('hidden');
+}
+
+function renderResults(tcs, analysis, userResponses, aiAnalysis) {
+  // Render context panels (Q&A + AI Analysis)
+  renderContextRow(analysis, userResponses, aiAnalysis);
+
+  if (!tcs?.length) {
+    $('results-content').innerHTML = '<p style="color:var(--text-muted);padding:20px;text-align:center">No test cases generated.</p>';
+    $('results-toolbar').classList.add('hidden');
+    return;
+  }
+
+  const prereqs = tcs.filter(t => t.status === 'prerequisite');
+  const tests = tcs.filter(t => t.status === 'testcase');
+  const existing = tcs.filter(t => t.status === 'existing');
+  const pmap = {}; prereqs.forEach(p => pmap[p.prereq_id] = p);
+
+  // Count by type
+  const posCount = tests.filter(t => t.type === 'positive').length;
+  const negCount = tests.filter(t => t.type === 'negative').length;
+  const edgeCount = tests.filter(t => t.type === 'edge').length;
+
+  window._rd = { prereqs, tests, existing, pmap, all: tcs, currentTab: 'all', currentFilter: 'all' };
+
+  let tabs = `<button class="results-tab active" onclick="switchTab(this,'all')">All<span class="count">${tcs.length}</span></button>`;
+  if (prereqs.length) tabs += `<button class="results-tab" onclick="switchTab(this,'prereqs')">Prerequisites<span class="count">${prereqs.length}</span></button>`;
+  tabs += `<button class="results-tab" onclick="switchTab(this,'tests')">Test Cases<span class="count">${tests.length}</span></button>`;
+  if (existing.length) tabs += `<button class="results-tab" onclick="switchTab(this,'existing')">Existing<span class="count">${existing.length}</span></button>`;
+  $('results-tabs').innerHTML = tabs;
+  $('results-toolbar').classList.remove('hidden');
+
+  // Update filter pills with counts
+  $('filter-pills').innerHTML = `
+    <button class="filter-pill active" data-type="all" onclick="setFilter(this)">All <span class="count">${tests.length}</span></button>
+    <button class="filter-pill" data-type="positive" onclick="setFilter(this)">Positive <span class="count">${posCount}</span></button>
+    <button class="filter-pill" data-type="negative" onclick="setFilter(this)">Negative <span class="count">${negCount}</span></button>
+    <button class="filter-pill" data-type="edge" onclick="setFilter(this)">Edge <span class="count">${edgeCount}</span></button>`;
+
+  $('search-input').value = '';
+  window._rd.currentFilter = 'all';
+  switchTab(document.querySelector('.results-tab'), 'all');
+}
+
+function switchTab(el, tab) {
+  document.querySelectorAll('.results-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  window._rd.currentTab = tab;
+  applyFilters();
+}
+
+function applyFilters() {
+  const d = window._rd;
+  const tab = d.currentTab;
+  const typeFilter = d.currentFilter || 'all';
+  const search = ($('search-input').value || '').trim().toLowerCase();
+
+  let items = tab === 'all' ? d.all : tab === 'prereqs' ? d.prereqs : tab === 'tests' ? d.tests : d.existing;
+
+  if (typeFilter !== 'all') {
+    items = items.filter(tc => tc.type === typeFilter);
+  }
+
+  if (search) {
+    items = items.filter(tc =>
+      (tc.title || '').toLowerCase().includes(search) ||
+      (tc.description || '').toLowerCase().includes(search)
+    );
+  }
+
+  if (!items.length) {
+    $('results-content').innerHTML = '<p style="color:var(--text-muted);padding:20px;text-align:center">No matching test cases.</p>';
+  } else {
+    $('results-content').innerHTML = items.map(tc => renderCard(tc, d.pmap)).join('');
+  }
+}
+
+function setFilter(el) {
+  document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  window._rd.currentFilter = el.dataset.type;
+  applyFilters();
+}
+
+function toggleCard(card) {
+  card.classList.toggle('expanded');
+}
+
+function expandAll() {
+  document.querySelectorAll('#results-content .tc-card').forEach(c => c.classList.add('expanded'));
+}
+
+function collapseAll() {
+  document.querySelectorAll('#results-content .tc-card').forEach(c => c.classList.remove('expanded'));
+}
+
+function renderCard(tc, pmap) {
+  if (tc.status === 'prerequisite') return renderPrereq(tc);
+  if (tc.status === 'existing') return renderExisting(tc);
+  return renderTC(tc, pmap);
+}
+
+function renderPrereq(tc) {
+  return `<div class="tc-card" data-type="">
+    <div class="tc-accent tc-accent-purple"></div>
+    <div class="tc-collapse-toggle tc-inner" onclick="toggleCard(this.parentElement)">
+      <div class="tc-header" style="margin-bottom:0">
+        <div class="tc-title">${esc(tc.title || '')}</div>
+        <div class="tc-badges">
+          <span class="badge badge-purple">${tc.prereq_id}</span>
+          <span class="badge badge-purple">Prerequisite</span>
+        </div>
+        ${chevronSVG}
+      </div>
+    </div>
+    <div class="tc-expand-body">
+      <div class="tc-inner" style="padding-top:0">
+        <div class="tc-desc">${esc(tc.description || '')}</div>
+        <div class="tc-section">
+          <div class="tc-section-title">Steps</div>
+          <div class="tc-steps">${esc(tc.steps || '')}</div>
+        </div>
+        ${testDataHTML(tc.test_data)}
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderExisting(tc) {
+  return `<div class="tc-card" data-type="">
+    <div class="tc-accent tc-accent-cyan"></div>
+    <div class="tc-collapse-toggle tc-inner" onclick="toggleCard(this.parentElement)">
+      <div class="tc-header" style="margin-bottom:0">
+        <div class="tc-title">Existing KB Match</div>
+        <div class="tc-badges">
+          <span class="badge badge-blue">KB: ${tc.id || ''}</span>
+          ${(tc.source || []).map(s => `<span class="badge badge-outline">${s}</span>`).join('')}
+        </div>
+        ${chevronSVG}
+      </div>
+    </div>
+    <div class="tc-expand-body">
+      <div class="tc-inner" style="padding-top:0">
+        <div class="existing-reason">${esc(tc.reason || '')}</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderTC(tc, pmap) {
+  const tBadge = { positive: 'badge-green', negative: 'badge-red', edge: 'badge-amber' };
+  const pBadge = { critical: 'badge-critical', major: 'badge-major', medium: 'badge-amber', minor: 'badge-gray', high: 'badge-red', none: 'badge-gray' };
+
+  let prereqHTML = '';
+  const pr = tc.prerequisites || {};
+  if (pr.required && pr.prereq_id && pmap[pr.prereq_id]) {
+    prereqHTML = `<div class="tc-section"><div class="tc-section-title">Prerequisite</div>
+      <div class="tc-prereq-link">${pr.prereq_id} \u2014 ${esc(pmap[pr.prereq_id].title || '')}</div></div>`;
+  } else if (pr.required && pr.id) {
+    prereqHTML = `<div class="tc-section"><div class="tc-section-title">Prerequisite</div>
+      <div class="tc-kb-link">KB Test Case: ${pr.id}</div></div>`;
+  }
+
+  return `<div class="tc-card" data-type="${tc.type || ''}">
+    <div class="tc-accent tc-accent-blue"></div>
+    <div class="tc-collapse-toggle tc-inner" onclick="toggleCard(this.parentElement)">
+      <div class="tc-header" style="margin-bottom:0">
+        <div class="tc-title">${esc(tc.title || '')}</div>
+        <div class="tc-badges">
+          ${tc.type ? `<span class="badge ${tBadge[tc.type] || 'badge-gray'}">${tc.type}</span>` : ''}
+          ${tc.priority ? `<span class="badge ${pBadge[tc.priority] || 'badge-gray'}">${tc.priority}</span>` : ''}
+          ${(tc.source || []).map(s => `<span class="badge badge-outline">${s}</span>`).join('')}
+        </div>
+        ${chevronSVG}
+      </div>
+    </div>
+    <div class="tc-expand-body">
+      <div class="tc-inner" style="padding-top:0">
+        <div class="tc-desc">${esc(tc.description || '')}</div>
+        ${prereqHTML}
+        <div class="tc-section">
+          <div class="tc-section-title">Steps</div>
+          <div class="tc-steps">${esc(tc.steps || '')}</div>
+        </div>
+        ${testDataHTML(tc.test_data)}
+      </div>
+    </div>
+  </div>`;
+}
+
+function testDataHTML(td) {
+  const c = td?.content;
+  if (!c?.length) return '';
+  let rows = '';
+  c.forEach(item => {
+    Object.entries(item).forEach(([k, v]) => {
+      rows += `<tr><td><code>{{${esc(k)}}}</code></td><td>${v != null && v !== '' ? esc(String(v)) : ''}</td></tr>`;
+    });
+  });
+  return `<div class="tc-section">
+    <div class="tc-section-title">Test Data</div>
+    <table class="td-table"><thead><tr><th>Variable</th><th>Value</th></tr></thead><tbody>${rows}</tbody></table>
+  </div>`;
+}
+</script>
+</body>
+</html>
