@@ -1443,7 +1443,7 @@ async function resumeSession() {
       const est = 120;
       renderProcessing(est);
       S.elapsedTimer = setInterval(() => renderProcessing(est), 1000);
-      S.pollTimer = setInterval(() => pollOnce(est), 10000);
+      S.pollTimer = setInterval(() => pollOnce(est), 30000);
       setTimeout(() => pollOnce(est), 3000);
       saveSession();
     }
@@ -1599,7 +1599,7 @@ function startPolling(est) {
   S.pollStart = Date.now();
   renderProcessing(est);
   S.elapsedTimer = setInterval(() => renderProcessing(est), 1000);
-  S.pollTimer = setInterval(() => pollOnce(est), 10000);
+  S.pollTimer = setInterval(() => pollOnce(est), 30000);
   setTimeout(() => pollOnce(est), 3000);
 }
 
@@ -1902,9 +1902,9 @@ function renderExisting(tc) {
     <div class="tc-accent tc-accent-cyan"></div>
     <div class="tc-collapse-toggle tc-inner" onclick="toggleCard(this.parentElement)">
       <div class="tc-header" style="margin-bottom:0">
-        <div class="tc-title">Existing KB Match</div>
+        <div class="tc-title"><a href="https://${encodeURIComponent($('org-name').value)}.contextqa.com/td/cases/${tc.id}/steps" target="_blank" style="color:inherit;text-decoration:underline;text-underline-offset:2px">${esc(tc.title || 'Existing Test Case')}</a></div>
         <div class="tc-badges">
-          <span class="badge badge-blue">KB: ${tc.id || ''}</span>
+          <span class="badge badge-blue">ID: ${tc.id || ''}</span>
           ${(tc.source || []).map(s => `<span class="badge badge-outline">${s}</span>`).join('')}
         </div>
         ${chevronSVG}
@@ -1976,4 +1976,3 @@ function testDataHTML(td) {
 </script>
 </body>
 </html>
-
