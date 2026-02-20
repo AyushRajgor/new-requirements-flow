@@ -1081,7 +1081,7 @@ body {
     </div>
 
     <!-- Hidden connection fields (kept for JS compatibility) -->
-    <input type="hidden" id="api-url" value="http://localhost:8081">
+    <input type="hidden" id="api-url" value="https://web-finder-dev.contextqa.com/">
     <input type="hidden" id="auth-token" value="">
 
     <!-- Upload Form -->
@@ -1395,7 +1395,7 @@ function renderSessionHistory() {
 function resumeFromHistory(idx) {
   const s = getAllSessions()[idx];
   if (!s) return;
-  $('api-url').value = s.apiUrl || 'http://localhost:8081';
+  $('api-url').value = s.apiUrl || 'https://web-finder-dev.contextqa.com/';
   $('org-name').value = s.orgName || '';
   $('auth-token').value = s.authToken || '';
   $('resume-session-id').value = s.sessionId;
@@ -1976,3 +1976,4 @@ function testDataHTML(td) {
 </script>
 </body>
 </html>
+
